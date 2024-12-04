@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Notes Generator</title>
+
+  <!-- Updated Bootstrap and added Bootstrap icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    .response-card {
+      max-width: 40rem;
+    }
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+    .timer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    #timerDisplay {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #007bff;
+      margin-right: 10px;
+    }
+    #resetButton {
+        margin-left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href=".">Agent Notes</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <div class="nav-item dropdown ms-auto" role="group" aria-label="Toggle dark mode" title="Toggle Dark Mode">
+          <button class="dark-theme-toggle btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle theme (auto)">
+            <i class="bi bi-circle-half"></i> <span class="d-lg-none ms-2">Toggle theme</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" data-bs-theme-value="light"><i class="me-2 bi bi-sun-fill"></i> Light</button></li>
+            <li><button class="dropdown-item" data-bs-theme-value="dark"><i class="me-2 bi bi-moon-stars-fill"></i> Dark</button></li>
+            <li><button class="dropdown-item" data-bs-theme-value="auto"><i class="me-2 bi bi-circle-half"></i> Auto</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 class="mt-5 text-center">Agent Notes Generator</h1>
+
+    <div class="mx-auto my-5 response-card">
+      <p><strong>Agent Notes Generator</strong> leverages <strong>LLM</strong> technology to summarize customer interactions effectively.</p>
+      <p>Create concise, professional, and actionable notes to enhance post-call documentation and improve customer support efficiency.</p>
+      <p>Enter the details of a customer interaction below, and click "Generate Notes" to get a summary.</p>
+    </div>
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="text-center">
+            <div class="timer mb-3">
+              <span id="timerDisplay">03:00</span>
+              <button id="startButton" class="btn btn-primary btn-sm">Start</button>
+              <button id="resetButton" class="btn btn-secondary btn-sm" style="margin-right: auto;">Reset Timer</button>
+              <button id="clearButton" class="btn btn-outline-danger help-popover">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="issue">Issue:</label>
+            <input type="text" id="issue" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="courseKey">Course Key:</label>
+            <input type="text" id="courseKey" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="assignment">Assignment Name/Chapter/Activity:</label>
+            <input type="text" id="assignment" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="ac">AC:</label>
+            <input type="text" id="ac" class="form-control" />
+          </div>
+        </div>
+      </div>
+      <h5 class="mt-4">Troubleshooting Steps</h5>
+      <div class="accordion" id="troubleshootingAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#generalQuestions"
+            >
+              General Questions <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="generalQuestions" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const troubleshootingQuestions = [
+                    "Asked for the customer's email address or alternate email address." ,
+                    "Asked for the course details (course name and number).",
+                    "Asked for the instructor's details (name and email address).",
+                    "Asked for the error message received.",
+                    "Asked for the screenshot; screenshot attached to this case.",
+                    "Asked for proof of financial aid.",
+                    "Requested proof of purchase; proof of purchase attached to this case.",
+                    "Asked for the assignment name that the student is having issues with.",
+                    "Asked the student to provide a description of their issues.",
+                    "Asked for their course Learning Management System.",
+                    "Asked if they have an existing case ID. "
+                ];
+
+                troubleshootingQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#olrSteps"
+            >
+              OLR <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="olrSteps" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const olrQuestions = [
+                  "Lunched Front Door",
+                  "Reset AC",
+                  "Deactivated AC",
+                  "Verified if the AC is valid",
+                  "Checked the order number",
+                  "Checked for 'Opt' status",
+                  "Checked the course roster to verify enrollment",
+                  "Checked to see if the course is LMS-integrated",
+                  "Reviewed students' information in OLR (course name/key, purchase history, etc.)",
+                  "Reapplied payment",
+                  "Performed GP extension for (number of days here)"
+                ];
+
+                olrQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#webAssignSteps"
+            >
+              WebAssign Admin <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="webAssignSteps" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const webAssignQuestions = [
+                  "Validate the code in WA Admin",
+                  "Masquerade on the instructor account to check the accepted code in the course.",
+                  "Update student's number in WA.",
+                  "Masquerade on the instructor's account to check the enrollment process (manual enrollment or through a course key)",
+                  "Checked the assignment's restrictions of the course.",
+                  "Addressed the issue where the student has paid access but is still seeing 'Grace Period has ended' when launching the course. ",
+                  "Performed Sync process"
+                ];
+
+                webAssignQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#samAdminSteps"
+            >
+              SAM Admin <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="samAdminSteps" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const samAdminQuestions = [
+                  "Validated keycode",
+                  "Validated the iKey provided",
+                  "Pull up student's LTI and native SAM platform to check the course"
+                ];
+
+                samAdminQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#salesforceAdminSteps"
+            >
+              Salesforce Admin Tool <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="salesforceAdminSteps" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const salesforceAdminQuestions = [
+                  "Created a generic account",
+                  "Performed CU subscription transfer",
+                  "Performed CUe subscription transfer"
+                ];
+
+                salesforceAdminQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#nglSyncSteps"
+            >
+              NGLSync <i class="bi bi-chevron-down"></i>
+            </button>
+          </h2>
+          <div id="nglSyncSteps" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <script>
+                const nglSyncQuestions = [
+                  "Checked if the student is enrolled to the course",
+                  "Provided instructions on how to reset the account password"
+                ];
+
+                nglSyncQuestions.forEach(question => {
+                  document.write(`
+                    <label>
+                      <input type="checkbox" class="troubleshoot" /> ${question}
+                    </label><br />
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h5 class="mt-4">Resolution Steps</h5>
+      <div id="resolutionSteps" class="resolution-steps">
+        <script>
+          const resolutionQuestions = [
+            "Referred the student back to their instructor.",
+            "Advised the student to perform basic troubleshooting steps.",
+            "Advised them to reach out to the original place of purchase.",
+            "Advised them to reach back to us when higher levels of support are available.",
+            "Located similar cases on Salesforce and Slack.",
+            "Researched articles in Confluence.",
+            "Reached out to Slack for assistance using workflow.",
+            "Educated the customer on the steps performed that fixed the issue.",
+            "Advised that they be transferred to a higher level of support for further assistance.",
+            "Escalated the case to S2 for further investigation.",
+            "Replicated the issue encountered by the customer by (details here).",
+            "Sent out a warning spiel due to the customer's inactivity.",
+            "Sent out the closing spiel.",
+            "Sent a disconnection email."
+          ];
+
+          resolutionQuestions.forEach(question => {
+            document.write(`
+              <label>
+                <input type="checkbox" class="resolution" /> ${question}
+              </label><br />
+            `);
+          });
+        </script>
+      </div>
+      <button id="generateNotes" class="btn btn-success mt-3">Generate Notes</button>
+      <button id="copyNotes" class="btn btn-info mt-3">Copy to Clipboard</button>
+      <div class="mt-4">
+        <h5>Generated Notes</h5>
+        <div id="generatedNotes" style="white-space: pre-wrap"></div>
+      </div>
+    </div>
+
+     <!-- Footer -->
+  <footer class="my-5 vh-100 d-flex align-items-center justify-content-center">
+    <h1 class="display-6">Designed by <a href="https://gramener.com/" class="text-reset link-offset-3 link-underline link-underline-opacity-25">Gramener</a></h1>
+  </footer>
+
+
+    <script type="module">
+      let timer;
+      let seconds = 180;
+      const timerDisplay = document.getElementById('timerDisplay');
+
+      function updateTimer() {
+          const minutes = Math.floor(seconds / 60);
+          const remainderSeconds = seconds % 60;
+          timerDisplay.textContent = `${('0' + minutes).slice(-2)}:${('0' + remainderSeconds).slice(-2)}`;
+          if (seconds > 0) {
+              seconds--;
+          } else {
+              clearInterval(timer);
+              alert('Time is up!');
+          }
+      }
+      document.getElementById('startButton').addEventListener('click', () => {
+          clearInterval(timer);
+          timer = setInterval(updateTimer, 1000);
+      });
+      document.getElementById('resetButton').addEventListener('click', () => {
+          clearInterval(timer);
+          seconds = 180;
+          timerDisplay.textContent = '03:00';
+      });
+      document.getElementById('clearButton').addEventListener('click', () => {
+          document.getElementById('issue').value = '';
+          document.getElementById('courseKey').value = '';
+          document.getElementById('assignment').value = '';
+          document.getElementById('ac').value = '';
+          document.querySelectorAll('.troubleshoot').forEach(checkbox => {
+              checkbox.checked = false;
+          });
+          document.querySelectorAll('.resolution').forEach(checkbox => {
+              checkbox.checked = false;
+          });
+          document.getElementById('generatedNotes').textContent = '';
+      });
+      document.getElementById('generateNotes').addEventListener('click', () => {
+          const issue = document.getElementById('issue').value;
+          const courseKey = document.getElementById('courseKey').value;
+          const assignment = document.getElementById('assignment').value;
+          const ac = document.getElementById('ac').value;
+          let notes = `Issue: ${issue}\nCourse Key: ${courseKey}\nAssignment Name/Chapter/Activity: ${assignment}\nAC: ${ac}\n\nTroubleshooting Steps:\n`;
+          const troubleshootCheckboxes = document.querySelectorAll('.troubleshoot:checked');
+          troubleshootCheckboxes.forEach(checkbox => {
+              notes += `- ${checkbox.parentElement.textContent.trim()}\n`;
+          });
+          notes += `\nResolution Steps:\n`;
+          const resolutionCheckboxes = document.querySelectorAll('.resolution:checked');
+          resolutionCheckboxes.forEach(checkbox => {
+              notes += `- ${checkbox.parentElement.textContent.trim()}\n`;
+          });
+          document.getElementById('generatedNotes').textContent = notes;
+          localStorage.setItem('generatedNotes', notes);
+      });
+
+      document.getElementById('copyNotes').addEventListener('click', () => {
+          const notes = document.getElementById('generatedNotes').textContent;
+          navigator.clipboard.writeText(notes).then(() => {
+              alert('Notes copied to clipboard!');
+          }).catch(err => {
+              alert('Failed to copy: ', err);
+          });
+      });
+
+      // Load last generated notes if available
+      window.addEventListener('load', () => {
+          const savedNotes = localStorage.getItem('generatedNotes');
+          if (savedNotes) {
+              document.getElementById('generatedNotes').textContent = savedNotes;
+          }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@gramex/ui@0.3/dist/dark-theme.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </body>
+</html>

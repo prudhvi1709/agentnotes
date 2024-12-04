@@ -1,0 +1,7 @@
+deploy:
+  stage: deploy
+  script: deploy
+  variables:
+    SERVER: ubuntu@gramener.com
+    VERSION: static
+    URL: agentnotes  # Deploys gramener.com/your-url/
