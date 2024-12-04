@@ -73,7 +73,8 @@
             <div class="timer mb-3">
               <span id="timerDisplay">03:00</span>
               <button id="startButton" class="btn btn-primary btn-sm">Start</button>
-              <button id="resetButton" class="btn btn-secondary btn-sm">Reset</button>
+              <button id="resetButton" class="btn btn-secondary btn-sm" style="margin-right: auto;">Reset Timer</button>
+              <button id="clearButton" class="btn btn-outline-danger help-popover">Clear</button>
             </div>
           </div>
         </div>
@@ -377,6 +378,8 @@
           clearInterval(timer);
           seconds = 180;
           timerDisplay.textContent = '03:00';
+      });
+      document.getElementById('clearButton').addEventListener('click', () => {
           document.getElementById('issue').value = '';
           document.getElementById('courseKey').value = '';
           document.getElementById('assignment').value = '';
